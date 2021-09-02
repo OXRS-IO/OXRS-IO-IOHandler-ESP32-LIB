@@ -1,0 +1,45 @@
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+OXRS_Input	KEYWORD1
+OXRS_Output	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+getType		KEYWORD2
+setType		KEYWORD2
+getInvert	KEYWORD2
+setInvert	KEYWORD2
+getInterlock	KEYWORD2
+setInterlock	KEYWORD2
+getTimer			KEYWORD2
+setTimer			KEYWORD2
+
+process		KEYWORD2
+handleCommand	KEYWORD2
+onEvent		KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+BUTTON			LITERAL1
+CONTACT			LITERAL1
+ROTARY			LITERAL1
+SWITCH			LITERAL1
+TOGGLE			LITERAL1
+
+NO_EVENT	LITERAL1
+LOW_EVENT			LITERAL1
+HIGH_EVENT		LITERAL1
+HOLD_EVENT	LITERAL1
+
+MOTOR					LITERAL1
+RELAY					LITERAL1
+TIMER					LITERAL1
+
+RELAY_ON	LITERAL1
+RELAY_OFF	LITERAL1
