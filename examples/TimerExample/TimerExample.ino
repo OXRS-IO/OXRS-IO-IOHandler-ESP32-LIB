@@ -21,12 +21,12 @@ void setup() {
     mcp23017.pinMode(pin, OUTPUT);
   }
 
+  // Initialise our output handler
+  oxrsOutput.begin(outputEvent);
+
   // Set pin 0 to have a 2s timer
   oxrsOutput.setType(0, TIMER);
   oxrsOutput.setTimer(0, 2);
-  
-  // Register our callback handler
-  oxrsOutput.onEvent(outputEvent);
 }
 
 void loop() {

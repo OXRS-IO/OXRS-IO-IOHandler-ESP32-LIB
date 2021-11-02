@@ -52,7 +52,8 @@ typedef void (*eventCallback)(uint8_t, uint8_t, uint8_t, uint8_t);
 class OXRS_Output
 {
   public:
-    OXRS_Output();
+    // Initialise the output handler
+    void begin(eventCallback, uint8_t defaultType=RELAY);
 
     // Get/Set the output type
     uint8_t getType(uint8_t output);
@@ -71,9 +72,6 @@ class OXRS_Output
     
     // Handle a command to set the state for a specific output
     void handleCommand(uint8_t id, uint8_t output, uint8_t state);
-    
-    // Set callback function to be called when an output is changed
-    void onEvent(eventCallback);
 
   private:
     // Configuration variables
@@ -96,7 +94,7 @@ class OXRS_Output
     outputData_t _state[OUTPUT_COUNT];
 
     // Output event callback
-    eventCallback _onEvent;
+    eventCallback _callback;
 
     // Private methods
     uint8_t _updateOutput(uint8_t id, uint8_t output, uint8_t state);

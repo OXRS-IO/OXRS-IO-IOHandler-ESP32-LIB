@@ -18,13 +18,13 @@ void setup() {
   for (uint8_t pin = 0; pin < 16; pin++) {
     mcp23017.pinMode(pin, INPUT_PULLUP);
   }
+  
+  // Initialise our input handler
+  oxrsInput.begin(inputEvent);
 
   // Set pin 0 to be a BUTTON type and invert
   oxrsInput.setType(0, BUTTON);
   oxrsInput.setInvert(0, 1);
-  
-  // Register our callback handler
-  oxrsInput.onEvent(inputEvent);
 }
 
 void loop() {

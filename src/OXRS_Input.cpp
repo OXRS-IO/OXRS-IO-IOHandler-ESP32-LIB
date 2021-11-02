@@ -10,14 +10,17 @@
 #include "Arduino.h"
 #include "OXRS_Input.h"
 
-OXRS_Input::OXRS_Input() 
+void OXRS_Input::begin(eventCallback callback, uint8_t defaultType) 
 {
+  // Store a reference to our event callback
+  _callback = callback; 
+
   // Initialise our state variables
   _lastUpdateTime = 0;
   for (uint8_t i = 0; i < INPUT_COUNT; i++)
   {
-    // Default all inputs to non-inverted switches
-    setType(i, SWITCH);
+    // Default all inputs
+    setType(i, defaultType);
     setInvert(i, 0);
 
     // Assume all inputs are in-active - i.e. HIGH
@@ -65,11 +68,6 @@ void OXRS_Input::setInvert(uint8_t input, uint8_t invert)
   _invert = (_invert & mask) | ((uint16_t)invert << input);
 }
 
-void OXRS_Input::onEvent(eventCallback callback)
-{ 
-  _onEvent = callback; 
-}
-
 void OXRS_Input::process(uint8_t id, uint16_t value) 
 {
   // Process each input to see what, if any, events have occured
@@ -77,14 +75,14 @@ void OXRS_Input::process(uint8_t id, uint16_t value)
   _update(event, value);
 
   // Check if we have a callback to handle the press events
-  if (_onEvent) 
+  if (_callback) 
   {
     for (uint8_t i = 0; i < INPUT_COUNT; i++)
     {
       // Only interested in inputs with events to report
       if (event[i] != NO_EVENT) 
       {
-        _onEvent(id, i, getType(i), event[i]);
+        _callback(id, i, getType(i), event[i]);
       }
     }
   }

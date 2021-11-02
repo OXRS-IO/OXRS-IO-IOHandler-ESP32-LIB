@@ -10,13 +10,16 @@
 #include "Arduino.h"
 #include "OXRS_Output.h"
 
-OXRS_Output::OXRS_Output() 
+void OXRS_Output::begin(eventCallback callback, uint8_t defaultType) 
 {
+  // Store a reference to our event callback
+  _callback = callback; 
+
   // Initialise our state variables
   for (uint8_t i = 0; i < OUTPUT_COUNT; i++)
   {
-    // Default all outputs to relays, no interlock, and default timer
-    setType(i, RELAY);
+    // Default all outputs
+    setType(i, defaultType);
     setInterlock(i, i);
     setTimer(i, DEFAULT_TIMER_SECS);
 
@@ -72,11 +75,6 @@ uint16_t OXRS_Output::getTimer(uint8_t output)
 void OXRS_Output::setTimer(uint8_t output, uint16_t timer)
 {
   _timer[output] = timer;
-}
-
-void OXRS_Output::onEvent(eventCallback callback)
-{ 
-  _onEvent = callback; 
 }
 
 void OXRS_Output::process()
@@ -153,9 +151,9 @@ uint8_t OXRS_Output::_updateOutput(uint8_t id, uint8_t output, uint8_t state)
   }
 
   // Check if we have a callback to handle events
-  if (_onEvent) 
+  if (_callback) 
   {
-    _onEvent(id, output, getType(output), state);
+    _callback(id, output, getType(output), state);
   }
 
   // Update the state of this output

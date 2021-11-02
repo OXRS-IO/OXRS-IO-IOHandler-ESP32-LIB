@@ -22,12 +22,12 @@ void setup() {
     mcp23017.pinMode(pin, OUTPUT);
   }
 
+  // Initialise our output handler
+  oxrsOutput.begin(outputEvent);
+  
   // Set pins 0 and 1 to be interlocked
   oxrsOutput.setInterlock(0, 1);
   oxrsOutput.setInterlock(1, 0);
-  
-  // Register our callback handler
-  oxrsOutput.onEvent(outputEvent);
 }
 
 void loop() {

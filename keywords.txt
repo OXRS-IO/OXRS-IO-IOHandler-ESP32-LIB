@@ -18,9 +18,9 @@ setInterlock	KEYWORD2
 getTimer			KEYWORD2
 setTimer			KEYWORD2
 
+begin		KEYWORD2
 process		KEYWORD2
 handleCommand	KEYWORD2
-onEvent		KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
