@@ -150,6 +150,19 @@ uint8_t OXRS_Output::_updateOutput(uint8_t id, uint8_t output, uint8_t state)
     return 0;
   }
 
+  // Safety check to ensure interlocked outputs can't be active at same time
+  uint8_t interlock = getInterlock(output);
+
+  // Check if output is interlocked and we are activating it
+  if (interlock != output && state == RELAY_ON)
+  {
+    // If our interlocked output is active then we ignore this command
+    if (_state[interlock].data.current == RELAY_ON)
+    {
+      return 0;
+    }
+  }
+
   // Check if we have a callback to handle events
   if (_callback) 
   {
