@@ -190,7 +190,7 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
           _state[i].data.state = IS_LOW;
           _eventTime[i] = 0;
   
-          // for CONTACT, SWITCH or TOGGLE inputs send an event since we have transitioned
+          // for CONTACT, PRESS, SWITCH or TOGGLE inputs send an event since we have transitioned
           if (type != BUTTON)
           {
             event[i] = LOW_EVENT;
@@ -233,9 +233,9 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
             _state[i].data.state = IS_HIGH;
             _eventTime[i] = 0;
             
-            // only send an event for CONTACT or SWITCH inputs, for TOGGLE we are only 
+            // only send an event for CONTACT, SWITCH or TOGGLE inputs, for PRESS we are only 
             // interested in HIGH -> LOW transitions so ignore this one
-            if (type != TOGGLE)
+            if (type != PRESS)
             {
               event[i] = HIGH_EVENT;
             }

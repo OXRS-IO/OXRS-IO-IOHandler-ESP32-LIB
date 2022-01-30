@@ -91,7 +91,7 @@ const unsigned char rotaryEvent[7][4] =
 };
 
 // Input types
-enum inputType_t { BUTTON, CONTACT, ROTARY, SWITCH, TOGGLE };
+enum inputType_t { BUTTON, CONTACT, PRESS, ROTARY, SWITCH, TOGGLE };
 
 // Input states
 enum inputState_t { IS_HIGH, DEBOUNCE_LOW, IS_LOW, DEBOUNCE_HIGH, AWAIT_MULTI };
@@ -110,15 +110,15 @@ union inputData_t
 // Callback type for onEvent(uint8_t id, uint8_t button, uint8_t state)
 //  * `id` is a custom id (user defined, passed to process()) 
 //  * `input` is the input number (0 -> INPUT_COUNT - 1)
-//  * `type` is one of BUTTON, CONTACT, SWITCH or TOGGLE
+//  * `type` is one of BUTTON, CONTACT, PRESS, ROTARY, SWITCH or TOGGLE
 //  * `state` is one of;
 //    [for BUTTON]
 //    - 1, 2, .. MAX_CLICKS   = number of presses (i.e. multi-click)
 //    - HOLD_EVENT            = long press (repeats every HOLD_TIME ms)
-//    [for CONTACT|SWITCH]
+//    [for CONTACT|SWITCH|TOGGLE]
 //    - LOW_EVENT             = HIGH -> LOW transition
 //    - HIGH_EVENT            = LOW -> HIGH transition
-//    [for TOGGLE]
+//    [for PRESS]
 //    - LOW_EVENT             = HIGH -> LOW transition
 //    [for ROTARY]
 //    - UP_EVENT              = clockwise
