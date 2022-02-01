@@ -38,10 +38,15 @@
 #define INPUT_COUNT              16
 
 // Event constants
+// NOTE: 1 to BUTTON_MAX_CLICKS is used to report multi-click events
 #define NO_EVENT                 0
-#define LOW_EVENT                13
-#define HIGH_EVENT               14
-#define HOLD_EVENT               15
+#define LOW_EVENT                11
+#define HIGH_EVENT               12
+// BUTTON events
+#define HOLD_EVENT               13
+// SECURITY events
+#define TAMPER_EVENT             14
+#define SHORT_EVENT              15
 
 // Rotary encoder state variables
 #define ROT_START                0x0
@@ -91,7 +96,7 @@ const unsigned char rotaryEvent[7][4] =
 };
 
 // Input types
-enum inputType_t { BUTTON, CONTACT, PRESS, ROTARY, SWITCH, TOGGLE };
+enum inputType_t { BUTTON, CONTACT, PRESS, ROTARY, SECURITY, SWITCH, TOGGLE };
 
 // Input states
 enum inputState_t { IS_HIGH, DEBOUNCE_LOW, IS_LOW, DEBOUNCE_HIGH, AWAIT_MULTI };
@@ -110,7 +115,7 @@ union inputData_t
 // Callback type for onEvent(uint8_t id, uint8_t button, uint8_t state)
 //  * `id` is a custom id (user defined, passed to process()) 
 //  * `input` is the input number (0 -> INPUT_COUNT - 1)
-//  * `type` is one of BUTTON, CONTACT, PRESS, ROTARY, SWITCH or TOGGLE
+//  * `type` is one of BUTTON, CONTACT, PRESS, ROTARY, SECURITY, SWITCH or TOGGLE
 //  * `state` is one of;
 //    [for BUTTON]
 //    - 1, 2, .. MAX_CLICKS   = number of presses (i.e. multi-click)
@@ -121,8 +126,13 @@ union inputData_t
 //    [for PRESS]
 //    - LOW_EVENT             = HIGH -> LOW transition
 //    [for ROTARY]
-//    - UP_EVENT              = clockwise
-//    - DOWN_EVENT            = counter-clockwise
+//    - LOW_EVENT             = clockwise
+//    - HIGH_EVENT            = counter-clockwise
+//    [for SECURITY]
+//    - HIGH_EVENT            = normal
+//    - LOW_EVENT             = alarm
+//    - TAMPER_EVENT          = tamper
+//    - SHORT_EVENT           = short
 typedef void (*eventCallback)(uint8_t, uint8_t, uint8_t, uint8_t);
 
 class OXRS_Input
@@ -165,6 +175,9 @@ class OXRS_Input
     uint8_t _getValue(uint16_t value, uint8_t input);
     uint16_t _getDebounceLowTime(uint8_t type);
     uint16_t _getDebounceHighTime(uint8_t type);
+    
+    uint8_t _getSecurityState(uint8_t securityValue[]);
+    uint8_t _getSecurityEvent(uint8_t securityState);
     
     void _update(uint8_t state[], uint16_t value);
 };

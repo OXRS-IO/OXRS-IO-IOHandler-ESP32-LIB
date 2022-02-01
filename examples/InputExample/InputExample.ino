@@ -7,7 +7,8 @@ Adafruit_MCP23X17 mcp23017;
 // Input handlers
 OXRS_Input oxrsInput;
 
-void setup() {
+void setup()
+{
   // Initialise serial for debug output
   Serial.begin(115200);
 
@@ -27,7 +28,8 @@ void setup() {
   oxrsInput.setInvert(0, 1);
 }
 
-void loop() {
+void loop()
+{
   // Read the values for all 16 inputs on this MCP
   uint16_t io_value = mcp23017.readGPIOAB();
 
@@ -35,8 +37,9 @@ void loop() {
   oxrsInput.process(0, io_value);
 }
 
-void inputEvent(uint8_t id, uint8_t input, uint8_t type, uint8_t state) {
-  char inputType[8];
+void inputEvent(uint8_t id, uint8_t input, uint8_t type, uint8_t state)
+{
+  char inputType[9];
   getInputType(inputType, type);
   char eventType[7];
   getEventType(eventType, type, state);
@@ -50,7 +53,7 @@ void inputEvent(uint8_t id, uint8_t input, uint8_t type, uint8_t state) {
   Serial.println(eventType);
 }
 
-void getInputType(char inputType[], uint8_t type)
+void getInputType(char inputType[], uint8_t type) 
 {
   // Determine what type of input we have
   sprintf_P(inputType, PSTR("ERROR"));
@@ -62,8 +65,14 @@ void getInputType(char inputType[], uint8_t type)
     case CONTACT:
       sprintf_P(inputType, PSTR("CONTACT"));
       break;
+    case PRESS:
+      sprintf_P(inputType, PSTR("PRESS"));
+      break;
     case ROTARY:
       sprintf_P(inputType, PSTR("ROTARY"));
+      break;
+    case SECURITY:
+      sprintf_P(inputType, PSTR("SECURITY"));
       break;
     case SWITCH:
       sprintf_P(inputType, PSTR("SWITCH"));
@@ -114,6 +123,9 @@ void getEventType(char eventType[], uint8_t type, uint8_t state)
           break;
       }
       break;
+    case PRESS:
+      sprintf_P(eventType, PSTR("PRESS"));
+      break;
     case ROTARY:
       switch (state)
       {
@@ -122,6 +134,23 @@ void getEventType(char eventType[], uint8_t type, uint8_t state)
           break;
         case HIGH_EVENT:
           sprintf_P(eventType, PSTR("DOWN"));
+          break;
+      }
+      break;
+    case SECURITY:
+      switch (state)
+      {
+        case HIGH_EVENT:
+          sprintf_P(eventType, PSTR("NORMAL"));
+          break;
+        case LOW_EVENT:
+          sprintf_P(eventType, PSTR("ALARM"));
+          break;
+        case TAMPER_EVENT:
+          sprintf_P(eventType, PSTR("TAMPER"));
+          break;
+        case SHORT_EVENT:
+          sprintf_P(eventType, PSTR("SHORT"));
           break;
       }
       break;
