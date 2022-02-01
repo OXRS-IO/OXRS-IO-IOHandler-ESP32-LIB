@@ -224,7 +224,7 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
         rotaryCount = 0;
       }
     }
-    if (type == SECURITY)
+    else if (type == SECURITY)
     {
       securityValue[securityCount++] = _getValue(value, i);      
 
