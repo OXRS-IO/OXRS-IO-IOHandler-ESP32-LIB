@@ -129,6 +129,7 @@ uint8_t OXRS_Input::_getSecurityState(uint8_t securityValue[])
   // ALARM      OFF   ON    ON    ON    =>  IS_LOW          LOW_EVENT
   // TAMPER     ON    OFF   ON    ON    =>  DEBOUNCE_LOW    TAMPER_EVENT
   // SHORT      OFF   ON    OFF   OFF   =>  DEBOUNCE_HIGH   SHORT_EVENT
+  // FAULT      ???   ???   ???   ???   =>  AWAIT_MULTI     FAULT_EVENT (any other sensor state, including un-plugged)
 
   // NORMAL
   if (securityValue[0] == HIGH && securityValue[1] == LOW && securityValue[2] == HIGH && securityValue[3] == LOW)
@@ -154,7 +155,7 @@ uint8_t OXRS_Input::_getSecurityState(uint8_t securityValue[])
     return DEBOUNCE_HIGH;
   }
 
-  // Ignore any other states
+  // Any other state is considered a fault
   return AWAIT_MULTI;
 }
 
@@ -173,9 +174,10 @@ uint8_t OXRS_Input::_getSecurityEvent(uint8_t securityState)
       
     case DEBOUNCE_HIGH:
       return SHORT_EVENT;
+      
+    default:
+      return FAULT_EVENT;
   }
-
-  return NO_EVENT;
 }
 
 void OXRS_Input::_update(uint8_t event[], uint16_t value) 

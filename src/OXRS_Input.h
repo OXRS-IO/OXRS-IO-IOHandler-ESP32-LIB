@@ -40,13 +40,14 @@
 // Event constants
 // NOTE: 1 to BUTTON_MAX_CLICKS is used to report multi-click events
 #define NO_EVENT                 0
-#define LOW_EVENT                11
-#define HIGH_EVENT               12
+#define LOW_EVENT                10
+#define HIGH_EVENT               11
 // BUTTON events
-#define HOLD_EVENT               13
+#define HOLD_EVENT               12
 // SECURITY events
-#define TAMPER_EVENT             14
-#define SHORT_EVENT              15
+#define TAMPER_EVENT             13
+#define SHORT_EVENT              14
+#define FAULT_EVENT              15
 
 // Rotary encoder state variables
 #define ROT_START                0x0
@@ -133,6 +134,7 @@ union inputData_t
 //    - LOW_EVENT             = alarm
 //    - TAMPER_EVENT          = tamper
 //    - SHORT_EVENT           = short
+//    - FAULT_EVENT           = fault
 typedef void (*eventCallback)(uint8_t, uint8_t, uint8_t, uint8_t);
 
 class OXRS_Input
