@@ -45,7 +45,7 @@ union outputData_t
 // Callback type for onEvent(uint8_t id, uint8_t output, uint8_t type, uint8_t state)
 //  * `id` is a custom id (user defined, passed to process()) 
 //  * `output` is the output number (0 -> OUTPUT_COUNT - 1)
-//  * `type` is RELAY or TIMER
+//  * `type` is MOTOR, RELAY or TIMER
 //  * `state` is RELAY_ON or RELAY_OFF
 typedef void (*eventCallback)(uint8_t, uint8_t, uint8_t, uint8_t);
 
