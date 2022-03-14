@@ -178,7 +178,7 @@ class OXRS_Input
     uint16_t _getDebounceLowTime(uint8_t type);
     uint16_t _getDebounceHighTime(uint8_t type);
     
-    uint8_t _getSecurityState(uint8_t securityValue[]);
+    uint8_t _getSecurityState(uint8_t securityValue[], uint8_t invert);
     uint8_t _getSecurityEvent(uint8_t securityState);
     
     void _update(uint8_t state[], uint16_t value);

@@ -119,9 +119,10 @@ uint16_t OXRS_Input::_getDebounceHighTime(uint8_t type)
   }
 }
   
-uint8_t OXRS_Input::_getSecurityState(uint8_t securityValue[])
+uint8_t OXRS_Input::_getSecurityState(uint8_t securityValue[], uint8_t invert)
 {
-  // Security sensor logic table (using our internal state constants)
+  // Security sensor logic table (using our internal state constants) for N/C sensor
+  // The NORMAL/ALARM states are swapped for N/O sensors, by inverting the 4th input
   //
   // Sensor     CH1   CH2   CH3   CH4       State           Event
   // -------------------------------------------------------------------
@@ -134,13 +135,13 @@ uint8_t OXRS_Input::_getSecurityState(uint8_t securityValue[])
   // NORMAL
   if (securityValue[0] == HIGH && securityValue[1] == LOW && securityValue[2] == HIGH && securityValue[3] == LOW)
   {
-    return IS_HIGH;
+    return invert ? IS_LOW : IS_HIGH;
   }
 
   // ALARM
   if (securityValue[0] == HIGH && securityValue[1] == LOW && securityValue[2] == LOW && securityValue[3] == LOW)
   {
-    return IS_LOW;
+    return invert ? IS_HIGH : IS_LOW;
   }
   
   // TAMPER
@@ -228,11 +229,15 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
     }
     else if (type == SECURITY)
     {
-      securityValue[securityCount++] = _getValue(value, i);      
+      // Get the input value (ignoring any invert config since we only expect
+      // a pre-defined set of input values based on our security mappings)
+      securityValue[securityCount++] = bitRead(value, i);      
 
       if (securityCount == 4)
       {
-        uint8_t securityState = _getSecurityState(securityValue);
+        // Get the security state, checking the invert config for the last
+        // input, as this allows support for either N/C or N/O sensors
+        uint8_t securityState = _getSecurityState(securityValue, getInvert(i));
 
         // Only generate an event if the state has changed
         if (_state[i].data.state != securityState)
