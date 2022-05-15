@@ -53,7 +53,7 @@ class OXRS_Output
 {
   public:
     // Initialise the output handler
-    void begin(eventCallback, uint8_t defaultType=RELAY);
+    void begin(eventCallback, uint8_t defaultType=RELAY, uint8_t defaultState=RELAY_OFF);
 
     // Get/Set the output type
     uint8_t getType(uint8_t output);

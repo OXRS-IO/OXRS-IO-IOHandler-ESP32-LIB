@@ -10,7 +10,7 @@
 #include "Arduino.h"
 #include "OXRS_Output.h"
 
-void OXRS_Output::begin(eventCallback callback, uint8_t defaultType) 
+void OXRS_Output::begin(eventCallback callback, uint8_t defaultType, uint8_t defaultState)
 {
   // Store a reference to our event callback
   _callback = callback; 
@@ -24,8 +24,8 @@ void OXRS_Output::begin(eventCallback callback, uint8_t defaultType)
     setTimer(i, DEFAULT_TIMER_SECS);
 
     // Initialise our output state
-    _state[i].data.current = RELAY_OFF;
-    _state[i].data.next = RELAY_OFF;
+    _state[i].data.current = defaultState;
+    _state[i].data.next = defaultState;
     _state[i].data.id = 0;
 
     _eventTime[i] = 0;
