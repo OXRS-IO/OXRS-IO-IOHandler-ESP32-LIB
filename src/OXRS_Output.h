@@ -67,6 +67,10 @@ class OXRS_Output
     uint16_t getTimer(uint8_t output);
     void setTimer(uint8_t output, uint16_t timer);
 
+    // Get/Set the disabled flag
+    uint8_t getDisabled(uint8_t output);
+    void setDisabled(uint8_t output, uint8_t disabled);
+
     // Call on each MCU loop to keep track of delays and timers
     void process();
     
@@ -78,6 +82,7 @@ class OXRS_Output
     uint8_t _type[8];
     uint8_t _interlock[OUTPUT_COUNT];
     uint16_t _timer[OUTPUT_COUNT];
+    uint16_t _disabled;
 
     // State variables
     // _lastUpdateTime: the last time we processed an update, allows for efficient calculation 

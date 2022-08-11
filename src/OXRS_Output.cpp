@@ -49,7 +49,7 @@ void OXRS_Output::setType(uint8_t output, uint8_t type)
   
   // sets a mask with the 4 bits we want to change to 0  
   uint8_t mask = ~(0x0F << bits);
-  // '& mask' clears, then '| (..)' sets the desired type at desired location 
+  // '& mask' clears, then '| (..)' sets the desired value at desired location 
   _type[index] = (_type[index] & mask) | (type << bits);
 
   // reset the state for this output ready for processing again
@@ -77,6 +77,20 @@ void OXRS_Output::setTimer(uint8_t output, uint16_t timer)
   _timer[output] = timer;
 }
 
+uint8_t OXRS_Output::getDisabled(uint8_t output)
+{
+  // shifts the desired 1 bit to the right most position then masks the LSB
+  return (_disabled >> output) & 0x01;
+}
+
+void OXRS_Output::setDisabled(uint8_t output, uint8_t disabled)
+{
+  // sets a mask with the 1 bit we want to change to 0  
+  uint16_t mask = ~(0x01 << output);
+  // '& mask' clears, then '| (..)' sets the desired value at desired location 
+  _disabled = (_disabled & mask) | ((uint16_t)disabled << output);
+}
+
 void OXRS_Output::process()
 {
   // Work out how long since our last update so we can increment the event times for each output
@@ -88,6 +102,9 @@ void OXRS_Output::process()
   {
     // Increment the event time for this output
     _eventTime[i] = _eventTime[i] + delta;
+
+    // Ignore if this output is disabled
+    if (getDisabled(i)) continue;
 
     // Check if this output is waiting for a delay that has expired
     if (_delayTime[i] > 0 && _eventTime[i] > _delayTime[i])
