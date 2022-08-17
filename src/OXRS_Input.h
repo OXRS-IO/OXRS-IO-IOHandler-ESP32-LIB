@@ -151,6 +151,10 @@ class OXRS_Input
     uint8_t getInvert(uint8_t input);
     void setInvert(uint8_t input, uint8_t invert);
 
+    // Get/Set the disabled flag
+    uint8_t getDisabled(uint8_t input);
+    void setDisabled(uint8_t input, uint8_t disabled);
+
     // Call on each MCU loop to process input values and raise events
     void process(uint8_t id, uint16_t value);
 
@@ -158,6 +162,7 @@ class OXRS_Input
     // Configuration variables
     uint8_t _type[8];
     uint16_t _invert;
+    uint16_t _disabled;
     
     // Input event callback
     eventCallback _callback;

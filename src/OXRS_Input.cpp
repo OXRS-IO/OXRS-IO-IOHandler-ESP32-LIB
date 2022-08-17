@@ -47,7 +47,7 @@ void OXRS_Input::setType(uint8_t input, uint8_t type)
   
   // sets a mask with the 4 bits we want to change to 0  
   uint8_t mask = ~(0x0F << bits);
-  // '& mask' clears, then '| (..)' sets the desired type at desired location 
+  // '& mask' clears, then '| (..)' sets the desired value at desired location 
   _type[index] = (_type[index] & mask) | (type << bits);
 
   // reset the state for this input ready for processing again
@@ -64,8 +64,22 @@ void OXRS_Input::setInvert(uint8_t input, uint8_t invert)
 {
   // sets a mask with the 1 bit we want to change to 0  
   uint16_t mask = ~(0x01 << input);
-  // '& mask' clears, then '| (..)' sets the desired type at desired location 
+  // '& mask' clears, then '| (..)' sets the desired value at desired location 
   _invert = (_invert & mask) | ((uint16_t)invert << input);
+}
+
+uint8_t OXRS_Input::getDisabled(uint8_t input)
+{
+  // shifts the desired 1 bit to the right most position then masks the LSB
+  return (_disabled >> input) & 0x01;
+}
+
+void OXRS_Input::setDisabled(uint8_t input, uint8_t disabled)
+{
+  // sets a mask with the 1 bit we want to change to 0  
+  uint16_t mask = ~(0x01 << input);
+  // '& mask' clears, then '| (..)' sets the desired value at desired location 
+  _disabled = (_disabled & mask) | ((uint16_t)disabled << input);
 }
 
 void OXRS_Input::process(uint8_t id, uint16_t value) 
@@ -203,6 +217,9 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
 
     // Increment the event time for this button
     _eventTime[i] = _eventTime[i] + delta;
+
+    // Ignore if this input is disabled
+    if (getDisabled(i)) continue;
 
     // Get the configured type of this input
     uint8_t type = getType(i);
