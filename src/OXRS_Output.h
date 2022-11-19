@@ -17,8 +17,12 @@
 #define OUTPUT_COUNT                16
 
 // Event constants
+#ifndef RELAY_ON
 #define RELAY_ON                    HIGH
+#endif
+#ifndef RELAY_OFF
 #define RELAY_OFF                   LOW
+#endif
 
 // Delay between an interlocked deactivation/activation
 #define RELAY_INTERLOCK_DELAY_MS    500
