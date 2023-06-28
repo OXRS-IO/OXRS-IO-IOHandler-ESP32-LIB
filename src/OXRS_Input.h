@@ -113,7 +113,7 @@ union inputData_t
   } data;
 };
 
-// Callback type for onEvent(uint8_t id, uint8_t button, uint8_t state)
+// Callback type for onEvent(uint8_t id, uint8_t input, uint8_t type, uint8_t state)
 //  * `id` is a custom id (user defined, passed to process()) 
 //  * `input` is the input number (0 -> INPUT_COUNT - 1)
 //  * `type` is one of BUTTON, CONTACT, PRESS, ROTARY, SECURITY, SWITCH or TOGGLE
@@ -159,7 +159,8 @@ class OXRS_Input
     void process(uint8_t id, uint16_t value);
 
     // Call to raise event with current value for each bi-stable input
-    void query(uint8_t id);
+    void queryAll(uint8_t id);
+    void query(uint8_t id, uint8_t input);
 
   private:
     // Configuration variables

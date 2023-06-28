@@ -102,47 +102,59 @@ void OXRS_Input::process(uint8_t id, uint16_t value)
   }
 }  
 
-void OXRS_Input::query(uint8_t id) 
+void OXRS_Input::queryAll(uint8_t id) 
+{
+  // Read security sensor values in quads (a full port)
+  uint8_t securityCount = 0;
+
+  for (uint8_t i = 0; i < INPUT_COUNT; i++)
+  {
+    // Only query the state for the last security input
+    if (getType(i) == SECURITY)
+    {
+      if (++securityCount < 4)
+        continue;
+
+      securityCount = 0;
+    }
+
+    // Get the current state for this input and publish an event
+    query(id, input);
+  }
+}
+
+void OXRS_Input::query(uint8_t id, uint8_t input) 
 {
   // Check if we have a callback to handle the events
   if (_callback) 
   {
-    // Read security sensor values in quads (a full port)
-    uint8_t securityCount = 0;
+    // Get the type and current state of this input
+    uint8_t type = getType(i);
+    uint8_t state = _state[input].data.state;
 
-    for (uint8_t i = 0; i < INPUT_COUNT; i++)
+    // Only makes sense to publish the current state for bi-stable inputs
+    switch (type) 
     {
-      // Get the type and current state of this input
-      uint8_t type = getType(i);
-      uint8_t state = _state[i].data.state;
+      case CONTACT:
+      case SWITCH:
+        // Ignore if we are in the middle of debounce checking
+        if (state == IS_HIGH)
+        {
+          _callback(id, input, type, HIGH_EVENT);
+        }
+        else if (state == IS_LOW)
+        {
+          _callback(id, input, type, LOW_EVENT);
+        }
+        break;
 
-      // Only makes sense to publish the current state for CONTACT, SECURITY and SWITCH inputs
-      switch (type) 
-      {
-        case CONTACT:
-        case SWITCH:
-          // Ignore if we are in the middle of debounce checking
-          if (state == IS_HIGH)
-          {
-            _callback(id, i, type, HIGH_EVENT);
-          }
-          else if (state == IS_LOW)
-          {
-            _callback(id, i, type, LOW_EVENT);
-          }
-          break;
-
-        case SECURITY:
-          if (++securityCount == 4)
-          {
-            _callback(id, i, type, _getSecurityEvent(state));
-            securityCount = 0;
-          }
-          break;
-      }
+      case SECURITY:
+        // Assume we are only called for the 4th security input
+        _callback(id, input, type, _getSecurityEvent(state));
+        break;
     }
   }
-}  
+}
 
 uint8_t OXRS_Input::_getValue(uint16_t value, uint8_t input)
 {
