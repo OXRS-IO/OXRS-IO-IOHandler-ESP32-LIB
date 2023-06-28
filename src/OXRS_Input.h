@@ -158,6 +158,9 @@ class OXRS_Input
     // Call on each MCU loop to process input values and raise events
     void process(uint8_t id, uint16_t value);
 
+    // Call to raise event with current value for each bi-stable input
+    void query(uint8_t id);
+
   private:
     // Configuration variables
     uint8_t _type[8];
