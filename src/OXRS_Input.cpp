@@ -123,9 +123,13 @@ void OXRS_Input::query(uint8_t id)
         case SWITCH:
           // Ignore if we are in the middle of debounce checking
           if (state == IS_HIGH)
+          {
             _callback(id, i, type, HIGH_EVENT);
+          }
           else if (state == IS_LOW)
-            _callback(id, i, type, HIGH_EVENT);          
+          {
+            _callback(id, i, type, LOW_EVENT);
+          }
           break;
 
         case SECURITY:
