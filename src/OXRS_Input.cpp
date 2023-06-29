@@ -129,7 +129,7 @@ void OXRS_Input::query(uint8_t id, uint8_t input)
   if (_callback) 
   {
     // Get the type and current state of this input
-    uint8_t type = getType(i);
+    uint8_t type = getType(input);
     uint8_t state = _state[input].data.state;
 
     // Only makes sense to publish the current state for bi-stable inputs
