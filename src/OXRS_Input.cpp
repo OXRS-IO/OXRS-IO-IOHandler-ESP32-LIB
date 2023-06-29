@@ -119,7 +119,7 @@ void OXRS_Input::queryAll(uint8_t id)
     }
 
     // Get the current state for this input and publish an event
-    query(id, input);
+    query(id, i);
   }
 }
 
