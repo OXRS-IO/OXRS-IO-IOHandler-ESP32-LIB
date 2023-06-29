@@ -88,7 +88,7 @@ void OXRS_Input::process(uint8_t id, uint16_t value)
   uint8_t event[INPUT_COUNT];
   _update(event, value);
 
-  // Check if we have a callback to handle the press events
+  // Check if we have a callback to handle the events
   if (_callback) 
   {
     for (uint8_t i = 0; i < INPUT_COUNT; i++)
@@ -101,6 +101,60 @@ void OXRS_Input::process(uint8_t id, uint16_t value)
     }
   }
 }  
+
+void OXRS_Input::queryAll(uint8_t id) 
+{
+  // Read security sensor values in quads (a full port)
+  uint8_t securityCount = 0;
+
+  for (uint8_t i = 0; i < INPUT_COUNT; i++)
+  {
+    // Only query the state for the last security input
+    if (getType(i) == SECURITY)
+    {
+      if (++securityCount < 4)
+        continue;
+
+      securityCount = 0;
+    }
+
+    // Get the current state for this input and publish an event
+    query(id, i);
+  }
+}
+
+void OXRS_Input::query(uint8_t id, uint8_t input) 
+{
+  // Check if we have a callback to handle the events
+  if (_callback) 
+  {
+    // Get the type and current state of this input
+    uint8_t type = getType(input);
+    uint8_t state = _state[input].data.state;
+
+    // Only makes sense to publish the current state for bi-stable inputs
+    switch (type) 
+    {
+      case CONTACT:
+      case SWITCH:
+        // Ignore if we are in the middle of debounce checking
+        if (state == IS_HIGH)
+        {
+          _callback(id, input, type, HIGH_EVENT);
+        }
+        else if (state == IS_LOW)
+        {
+          _callback(id, input, type, LOW_EVENT);
+        }
+        break;
+
+      case SECURITY:
+        // Assume we are only called for the 4th security input
+        _callback(id, input, type, _getSecurityEvent(state));
+        break;
+    }
+  }
+}
 
 uint8_t OXRS_Input::_getValue(uint16_t value, uint8_t input)
 {

@@ -20,6 +20,8 @@ setTimer		KEYWORD2
 
 begin			KEYWORD2
 process			KEYWORD2
+queryAll			KEYWORD2
+query			KEYWORD2
 handleCommand	KEYWORD2
 
 #######################################
