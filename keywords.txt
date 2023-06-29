@@ -13,6 +13,8 @@ getType			KEYWORD2
 setType			KEYWORD2
 getInvert		KEYWORD2
 setInvert		KEYWORD2
+getDisabled		KEYWORD2
+setDisabled		KEYWORD2
 getInterlock	KEYWORD2
 setInterlock	KEYWORD2
 getTimer		KEYWORD2

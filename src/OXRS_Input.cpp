@@ -125,6 +125,10 @@ void OXRS_Input::queryAll(uint8_t id)
 
 void OXRS_Input::query(uint8_t id, uint8_t input) 
 {
+  // Ignore if this input is disabled
+  if (getDisabled(input))
+    return;
+
   // Check if we have a callback to handle the events
   if (_callback) 
   {
@@ -273,7 +277,8 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
     _eventTime[i] = _eventTime[i] + delta;
 
     // Ignore if this input is disabled
-    if (getDisabled(i)) continue;
+    if (getDisabled(i)) 
+      continue;
 
     // Get the configured type of this input
     uint8_t type = getType(i);
