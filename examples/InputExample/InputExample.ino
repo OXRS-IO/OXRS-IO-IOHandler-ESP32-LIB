@@ -95,6 +95,9 @@ void getEventType(char eventType[], uint8_t type, uint8_t state)
         case HOLD_EVENT:
           sprintf_P(eventType, PSTR("HOLD"));
           break;
+        case RELEASE_EVENT:
+          sprintf_P(eventType, PSTR("RELEASE"));
+          break;
         case 1:
           sprintf_P(eventType, PSTR("SINGLE"));
           break;

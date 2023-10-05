@@ -30,7 +30,7 @@
 
 // BUTTON types need a few extra times for multi-click and hold event detection
 #define BUTTON_MULTI_CLICK_MS    200     // how long to wait for another click before sending a multi-click event
-#define BUTTON_HOLD_MS           500     // how long before a click is considered a HOLD event (and repeated)
+#define BUTTON_HOLD_MS           500     // how long before a click is considered a HOLD event
 #define BUTTON_MAX_CLICKS        5       // max count reported in a multi-click event
 
 // Assume we are dealing with a 2 byte IO value - i.e. 16 binary inputs
@@ -40,10 +40,11 @@
 // Event constants
 // NOTE: 1 to BUTTON_MAX_CLICKS is used to report multi-click events
 #define NO_EVENT                 0
-#define LOW_EVENT                10
-#define HIGH_EVENT               11
+#define LOW_EVENT                9
+#define HIGH_EVENT               10
 // BUTTON events
-#define HOLD_EVENT               12
+#define HOLD_EVENT               11
+#define RELEASE_EVENT            12
 // SECURITY events
 #define TAMPER_EVENT             13
 #define SHORT_EVENT              14
@@ -120,7 +121,8 @@ union inputData_t
 //  * `state` is one of;
 //    [for BUTTON]
 //    - 1, 2, .. MAX_CLICKS   = number of presses (i.e. multi-click)
-//    - HOLD_EVENT            = long press (repeats every HOLD_TIME ms)
+//    - HOLD_EVENT            = long press start
+//    - RELEASE_EVENT         = long press end
 //    [for CONTACT|SWITCH|TOGGLE]
 //    - LOW_EVENT             = HIGH -> LOW transition
 //    - HIGH_EVENT            = LOW -> HIGH transition

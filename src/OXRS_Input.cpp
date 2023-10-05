@@ -371,9 +371,12 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
         {
           if (type == BUTTON && _eventTime[i] > BUTTON_HOLD_MS) 
           {
-            _state[i].data.clicks = HOLD_EVENT;
-            _eventTime[i] = 0;
-            event[i] = HOLD_EVENT;
+            // only send the HOLD event once, at the start of the long press
+            if (_state[i].data.clicks != HOLD_EVENT)
+            {
+              _state[i].data.clicks = HOLD_EVENT;
+              event[i] = HOLD_EVENT;
+            }
           }
         }
       }
@@ -388,32 +391,28 @@ void OXRS_Input::_update(uint8_t event[], uint16_t value)
         }
         else if (_eventTime[i] > _getDebounceHighTime(type)) 
         {
+          _state[i].data.state = IS_HIGH;
+          _eventTime[i] = 0; 
+
           // for BUTTON inputs check if we have been holding or need to increment the 
           // click count, otherwise for other inputs handle the LOW -> HIGH transition
-          if (type != BUTTON)
-          {
-            _state[i].data.state = IS_HIGH;
-            _eventTime[i] = 0;
-            
-            // only send an event for CONTACT, SWITCH or TOGGLE inputs, for PRESS we are only 
-            // interested in HIGH -> LOW transitions so ignore this one
-            if (type != PRESS)
-            {
-              event[i] = HIGH_EVENT;
-            }
-          }
-          else
+          if (type == BUTTON)
           {
             if (_state[i].data.clicks == HOLD_EVENT) 
             {
-              _state[i].data.state = IS_HIGH;
+              event[i] = RELEASE_EVENT;
             } 
             else 
             {
               _state[i].data.clicks = min(BUTTON_MAX_CLICKS, _state[i].data.clicks + 1);
               _state[i].data.state = AWAIT_MULTI;
-              _eventTime[i] = 0; 
             }
+          }
+          else if (type != PRESS)
+          {
+            // only send an event for CONTACT, SWITCH or TOGGLE inputs, for PRESS we are only 
+            // interested in HIGH -> LOW transitions so ignore this one
+            event[i] = HIGH_EVENT;
           }
         }  
       } 
