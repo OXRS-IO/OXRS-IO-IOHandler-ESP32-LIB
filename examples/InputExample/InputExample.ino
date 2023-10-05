@@ -41,7 +41,7 @@ void inputEvent(uint8_t id, uint8_t input, uint8_t type, uint8_t state)
 {
   char inputType[9];
   getInputType(inputType, type);
-  char eventType[7];
+  char eventType[8];
   getEventType(eventType, type, state);
 
   Serial.print(F("[EVENT]"));
