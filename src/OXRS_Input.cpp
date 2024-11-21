@@ -105,7 +105,8 @@ void OXRS_Input::process(uint8_t id, uint16_t value)
 void OXRS_Input::processInput(uint8_t id, uint8_t input, uint8_t inputValue)
 {
   // Convert the input value to 16-bit so can pass to our normal processing loop
-  uint16_t value = 0;
+  // Set all bits high as HIGH is the OFF/INACTIVE state
+  uint16_t value = 0xFFFF;
 
   if (inputValue) 
   {
