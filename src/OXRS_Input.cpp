@@ -102,6 +102,24 @@ void OXRS_Input::process(uint8_t id, uint16_t value)
   }
 }  
 
+void OXRS_Input::processInput(uint8_t id, uint8_t input, uint8_t inputValue)
+{
+  // Convert the input value to 16-bit so can pass to our normal processing loop
+  uint16_t value = 0;
+
+  if (inputValue) 
+  {
+    value |= (1 << input);
+  } 
+  else
+  {
+    value &= ~(1 << input);
+  }
+
+  // Process this input to see what, if any, event has occured
+  process(id, value);
+}  
+
 void OXRS_Input::queryAll(uint8_t id) 
 {
   // Read security sensor values in quads (a full port)

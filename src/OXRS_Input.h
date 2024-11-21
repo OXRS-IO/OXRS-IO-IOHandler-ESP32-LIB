@@ -160,6 +160,9 @@ class OXRS_Input
     // Call on each MCU loop to process input values and raise events
     void process(uint8_t id, uint16_t value);
 
+    // Call on each MCU loop to process a single input (i.e. when monitoring GPIO)
+    void processInput(uint8_t id, uint8_t input, uint8_t inputValue);
+
     // Call to raise event with current value for each bi-stable input
     void queryAll(uint8_t id);
     void query(uint8_t id, uint8_t input);
